@@ -18,35 +18,48 @@
 
   /* ---------- HUD ---------- */
   #hud {
-    position: fixed; top: 0; left: 0; right: 0; padding: 12px 14px;
-    display: flex; justify-content: space-between; align-items: flex-start;
-    pointer-events: none; z-index: 5;
+    position: fixed; top: 0; left: 0; right: 0; padding: 10px 12px;
+    display: none; justify-content: space-between; align-items: flex-start;
+    pointer-events: none; z-index: 5; gap: 8px;
   }
   .badge {
-    background: rgba(255,255,255,0.88); border-radius: 18px; padding: 8px 14px;
+    background: rgba(255,255,255,0.88); border-radius: 16px; padding: 7px 12px;
     font-weight: bold; color: #4a3b2a; box-shadow: 0 4px 0 rgba(0,0,0,0.12);
-    font-size: clamp(15px, 4.5vw, 22px); line-height: 1.15; white-space: nowrap;
+    font-size: clamp(14px, 4vw, 20px); line-height: 1.1; white-space: nowrap;
   }
-  .badge small { display:block; font-size: 0.6em; color:#9a7b55; font-weight:bold; }
+  .badge small { display:block; font-size: 0.58em; color:#9a7b55; font-weight:bold; }
   #cheeseBadge { color:#b8860b; }
-  #hudLeft { display:flex; gap:8px; flex-wrap:wrap; }
+  #bestBadge { color:#c8810a; }
+  #hudLeft, #hudRight { display:flex; gap:8px; flex-wrap:wrap; }
+  #hudRight { justify-content:flex-end; align-items:center; }
+
+  /* power-up timers */
+  #powerups {
+    position: fixed; top: 64px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 8px; z-index: 6; pointer-events: none;
+  }
+  .pwr {
+    background: rgba(0,0,0,0.45); color:#fff; border-radius: 14px; padding: 5px 12px;
+    font-size: clamp(15px,4.5vw,20px); font-weight: bold; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
 
   /* ---------- Buttons ---------- */
   .btn {
     pointer-events: auto; cursor: pointer; border: none;
     font-family: inherit; font-weight: bold; color: #fff;
     background: linear-gradient(#ff7aa8, #ff4f88);
-    border-radius: 999px; padding: 16px 34px;
-    font-size: clamp(20px, 6vw, 30px);
+    border-radius: 999px; padding: 15px 30px; margin: 4px;
+    font-size: clamp(19px, 5.5vw, 28px);
     box-shadow: 0 6px 0 #c8366a, 0 10px 18px rgba(0,0,0,0.25);
     transition: transform .06s ease, box-shadow .06s ease;
   }
   .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #c8366a, 0 6px 10px rgba(0,0,0,0.25); }
   .btn.blue { background: linear-gradient(#6cc8ff, #2f9bff); box-shadow: 0 6px 0 #1f6fc0, 0 10px 18px rgba(0,0,0,0.25);}
+  .btn.small { font-size: clamp(15px,4vw,20px); padding: 11px 22px; background: linear-gradient(#b8b8c8,#8a8a9c); box-shadow: 0 5px 0 #5f5f70, 0 8px 14px rgba(0,0,0,0.25); }
 
   #muteBtn {
-    pointer-events: auto; cursor: pointer; width: 50px; height: 50px; border-radius: 50%;
-    border: none; background: rgba(255,255,255,0.88); font-size: 24px;
+    pointer-events: auto; cursor: pointer; width: 46px; height: 46px; border-radius: 50%;
+    border: none; background: rgba(255,255,255,0.88); font-size: 22px;
     box-shadow: 0 4px 0 rgba(0,0,0,0.12); display:flex; align-items:center; justify-content:center;
   }
 
@@ -54,7 +67,7 @@
   .overlay {
     position: fixed; inset: 0; z-index: 20;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 18px; text-align: center; padding: 24px;
+    gap: 14px; text-align: center; padding: 24px;
     background: radial-gradient(circle at 50% 30%, rgba(0,0,0,0.10), rgba(0,0,0,0.45));
     backdrop-filter: blur(2px);
   }
@@ -64,31 +77,49 @@
     text-shadow: 0 4px 0 #d8417a, 0 8px 0 rgba(0,0,0,0.18), 0 14px 22px rgba(0,0,0,0.4);
   }
   .title .em { color: var(--yellow); }
-  .subtitle { font-size: clamp(17px, 4.8vw, 26px); color: #fff; max-width: 560px; text-shadow: 0 2px 6px rgba(0,0,0,0.5); }
-  .emoji-row { font-size: clamp(40px, 12vw, 72px); letter-spacing: 6px; filter: drop-shadow(0 6px 6px rgba(0,0,0,0.3)); }
-  .big-score { font-size: clamp(26px, 7vw, 40px); color: var(--yellow); font-weight: bold; text-shadow: 0 3px 8px rgba(0,0,0,0.5); }
-  .hint { font-size: clamp(14px, 3.8vw, 18px); color: rgba(255,255,255,0.85); }
+  .subtitle { font-size: clamp(16px, 4.6vw, 25px); color: #fff; max-width: 580px; text-shadow: 0 2px 6px rgba(0,0,0,0.5); }
+  .emoji-row { font-size: clamp(38px, 11vw, 70px); letter-spacing: 6px; filter: drop-shadow(0 6px 6px rgba(0,0,0,0.3)); }
+  .big-score { font-size: clamp(24px, 6.5vw, 38px); color: var(--yellow); font-weight: bold; text-shadow: 0 3px 8px rgba(0,0,0,0.5); }
+  .best { font-size: clamp(18px,5vw,26px); color:#fff; font-weight:bold; text-shadow:0 2px 6px rgba(0,0,0,0.5); }
+  .newbest { color: var(--yellow); animation: pop 0.6s ease; }
+  @keyframes pop { 0%{transform:scale(0.4);} 60%{transform:scale(1.2);} 100%{transform:scale(1);} }
+  .hint { font-size: clamp(13px, 3.6vw, 17px); color: rgba(255,255,255,0.88); max-width: 560px; }
+  .btnrow { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; }
 
-  /* ---------- Touch joystick ---------- */
-  #joystick {
-    position: fixed; left: 26px; bottom: 26px; width: 140px; height: 140px;
+  /* ---------- Touch joysticks ---------- */
+  .joystick {
+    position: fixed; bottom: 24px; width: 132px; height: 132px;
     border-radius: 50%; z-index: 8; display: none; touch-action: none;
     background: radial-gradient(circle, rgba(255,255,255,0.28), rgba(255,255,255,0.10));
     border: 3px solid rgba(255,255,255,0.55); box-shadow: 0 4px 14px rgba(0,0,0,0.25);
   }
-  #knob {
-    position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px;
+  #joystick { left: 22px; }
+  #joystick2 { right: 22px; }
+  .joystick .knob {
+    position: absolute; left: 50%; top: 50%; width: 60px; height: 60px; margin: -30px 0 0 -30px;
     border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #ffd23f 70%, #f0a500);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.35); transition: transform .03s linear;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.35);
   }
+  #joystick2 .knob { background: radial-gradient(circle at 35% 30%, #fff, #6db3ff 70%, #2f7fd0); }
   body.touch #joystick { display: block; }
+  body.touch.twoplayer #joystick2 { display: block; }
 
-  /* floating "+1" score popups */
+  /* floating "+10" score popups */
   .pop {
     position: fixed; z-index: 9; pointer-events: none; font-weight: bold;
     color: var(--yellow); font-size: 30px; text-shadow: 0 2px 6px rgba(0,0,0,0.6);
     transform: translate(-50%, -50%); transition: transform .8s ease-out, opacity .8s ease-out; opacity: 1;
   }
+
+  /* big center banner (level up / power-up) */
+  #banner {
+    position: fixed; top: 34%; left: 50%; transform: translate(-50%,-50%);
+    z-index: 12; pointer-events: none; text-align:center;
+    font-size: clamp(34px, 10vw, 70px); font-weight: bold; color:#fff;
+    text-shadow: 0 4px 0 rgba(0,0,0,0.25), 0 8px 18px rgba(0,0,0,0.5);
+    opacity: 0; transition: opacity .25s ease, transform .25s ease;
+  }
+  #banner.show { opacity: 1; }
 
   #loadMsg {
     position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center;
@@ -99,28 +130,38 @@
 <body>
   <div id="game"></div>
 
-  <!-- Loading / no-internet fallback -->
   <div id="loadMsg">🧀 Loading your game… <br><br><small>(needs the internet the first time)</small></div>
 
   <!-- HUD -->
-  <div id="hud" style="display:none">
+  <div id="hud">
     <div id="hudLeft">
-      <div class="badge" id="cheeseBadge">🧀 <span id="cheeseCount">0</span>/<span id="cheeseTarget">12</span><small>cheese</small></div>
-      <div class="badge">⭐ <span id="scoreCount">0</span><small>score</small></div>
+      <div class="badge" id="cheeseBadge">🧀 <span id="cheeseCount">0</span>/<span id="cheeseTarget">6</span><small>cheese</small></div>
+      <div class="badge">🎚️ Lv <span id="levelCount">1</span>/<span id="levelMax">5</span><small>level</small></div>
     </div>
-    <button id="muteBtn" aria-label="sound on/off">🔊</button>
+    <div id="hudRight">
+      <div class="badge">⭐ <span id="scoreCount">0</span><small>score</small></div>
+      <div class="badge" id="bestBadge">🏆 <span id="bestCount">0</span><small>best</small></div>
+      <button id="muteBtn" aria-label="sound on/off">🔊</button>
+    </div>
   </div>
+  <div id="powerups"></div>
+  <div id="banner"></div>
 
-  <!-- Joystick (touch only) -->
-  <div id="joystick"><div id="knob"></div></div>
+  <!-- Joysticks (touch only) -->
+  <div class="joystick" id="joystick"><div class="knob"></div></div>
+  <div class="joystick" id="joystick2"><div class="knob"></div></div>
 
   <!-- Start screen -->
   <div class="overlay" id="startScreen">
     <div class="emoji-row">🐭💨 &nbsp; 🧀 &nbsp; 🐱</div>
     <h1 class="title">Cheese <span class="em">Dash!</span></h1>
-    <div class="subtitle">You are the little mouse! Grab all the cheese 🧀 and run away from the hungry cat 🐱</div>
-    <button class="btn" id="playBtn">▶ Play</button>
-    <div class="hint" id="controlHint">Use the arrow keys or W A S D to move</div>
+    <div class="subtitle">Grab all the cheese 🧀, grab power-ups ⚡, beat 5 levels — and run from the cat 🐱!</div>
+    <div class="best">🏆 Best Score: <span id="startBest">0</span></div>
+    <div class="btnrow">
+      <button class="btn" id="play1Btn">▶ 1 Player</button>
+      <button class="btn blue" id="play2Btn">👥 2 Players</button>
+    </div>
+    <div class="hint" id="controlHint">1 Player: arrow keys or W A S D &nbsp;•&nbsp; 2 Players: 🐭 grey = W A S D, 🐭 blue = arrow keys</div>
   </div>
 
   <!-- Game over -->
@@ -128,8 +169,12 @@
     <div class="emoji-row">🐱 &nbsp; 🐭💫</div>
     <h1 class="title">Caught!</h1>
     <div class="big-score" id="overScore">You got 0 cheese</div>
+    <div class="best" id="overBest">🏆 Best: 0</div>
     <div class="subtitle">So close! Try again? 💪</div>
-    <button class="btn" id="retryBtn">↺ Play Again</button>
+    <div class="btnrow">
+      <button class="btn" id="retryBtn">↺ Play Again</button>
+      <button class="btn small" id="menuBtn">🏠 Menu</button>
+    </div>
   </div>
 
   <!-- Win -->
@@ -137,8 +182,12 @@
     <div class="emoji-row">🏆 &nbsp; 🐭 &nbsp; 🧀🧀🧀</div>
     <h1 class="title">You <span class="em">Win!</span></h1>
     <div class="big-score" id="winScore">Amazing!</div>
-    <div class="subtitle">You got all the cheese and beat the cat! 🎉</div>
-    <button class="btn blue" id="winBtn">↺ Play Again</button>
+    <div class="best" id="winBest">🏆 Best: 0</div>
+    <div class="subtitle">You beat all 5 levels and the cat! 🎉</div>
+    <div class="btnrow">
+      <button class="btn blue" id="winBtn">↺ Play Again</button>
+      <button class="btn small" id="winMenuBtn">🏠 Menu</button>
+    </div>
   </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
@@ -146,49 +195,78 @@
 <script>
 "use strict";
 (function () {
-  if (typeof THREE === "undefined") { return; } // fallback message already shown
+  if (typeof THREE === "undefined") { return; }
 
   // ---------------------------------------------------------------------------
-  // Tuning knobs (easy to tweak!)
+  // Tuning knobs
   // ---------------------------------------------------------------------------
-  const BOUNDS = 27;            // how far the mouse can roam
-  const PLAYER_SPEED = 13;      // mouse speed
-  const CAT_SPEED_BASE = 6.5;   // cat starts slow...
-  const CAT_SPEED_MAX = 14;     // ...but never faster than this
-  const CAT_RAMP_PER_CHEESE = 0.5;
-  const CAT_RAMP_PER_SEC = 0.16;
-  const TARGET_CHEESE = 12;     // collect this many to win
-  const CHEESE_ON_FIELD = 6;    // how many appear at once
+  const BOUNDS = 27;
+  const PLAYER_SPEED = 13;
+  const CAT_SPEED_BASE = 6.0;
+  const CAT_SPEED_MAX = 15;
+  const CAT_RAMP_PER_CHEESE = 0.35;
+  const CAT_RAMP_PER_SEC = 0.12;
+  const CAT_LEVEL_STEP = 1.1;
+  const MAX_LEVEL = 5;
+  const CHEESE_ON_FIELD = 6;
   const CATCH_DIST = 1.7;
   const COLLECT_DIST = 1.6;
+  const SPEED_MULT = 1.85, SPEED_TIME = 6;
+  const MAGNET_TIME = 7, MAGNET_RADIUS = 16, MAGNET_PULL = 16;
+  const SHIELD_TIME = 6;
+  const POWERUP_EVERY = 13;     // seconds between power-up spawns
+  const POWERUP_LIFE = 11;      // seconds a power-up waits to be grabbed
+
+  function levelTarget(lv) { return 5 + lv; }            // L1=6 ... L5=10
+  function catBaseFor(lv) { return CAT_SPEED_BASE + (lv - 1) * CAT_LEVEL_STEP; }
+
+  // ---------------------------------------------------------------------------
+  // Themes (new places each level)
+  // ---------------------------------------------------------------------------
+  const THEMES = [
+    { name: "Meadow", gA: "#7bd16a", gB: "#74c863", spk1: "rgba(255,255,255,0.10)", spk2: "rgba(40,110,40,0.12)", sky: ["#4aa6e8", "#8fd0f4", "#d9f3ff"], fog: 0xbfeaff, sun: 1.0, hemi: 0.85, hemiGround: 0x6b8f4e },
+    { name: "Desert", gA: "#e8cd7a", gB: "#dcc06a", spk1: "rgba(255,255,255,0.12)", spk2: "rgba(150,110,40,0.15)", sky: ["#ffae47", "#ffd98a", "#fff0c9"], fog: 0xffe6b8, sun: 1.1, hemi: 0.9, hemiGround: 0xb59a55 },
+    { name: "Snowland", gA: "#eef5ff", gB: "#d9e7f7", spk1: "rgba(255,255,255,0.5)", spk2: "rgba(150,180,210,0.18)", sky: ["#7fb3e0", "#bfe0f5", "#eef7ff"], fog: 0xe6f1ff, sun: 1.0, hemi: 1.0, hemiGround: 0xbcd0e0 },
+    { name: "Candy Land", gA: "#ffb4da", gB: "#ff9ccb", spk1: "rgba(255,255,255,0.22)", spk2: "rgba(200,80,150,0.16)", sky: ["#c77dff", "#ff9ce0", "#ffd6f5"], fog: 0xffcdee, sun: 1.0, hemi: 0.95, hemiGround: 0xcf7fae },
+    { name: "Night", gA: "#3c4c70", gB: "#334260", spk1: "rgba(255,255,255,0.16)", spk2: "rgba(10,15,40,0.3)", sky: ["#0b1026", "#1b2550", "#3a4684"], fog: 0x1b2550, sun: 0.45, hemi: 0.4, hemiGround: 0x222a45 },
+  ];
 
   // ---------------------------------------------------------------------------
   // Globals
   // ---------------------------------------------------------------------------
-  let scene, camera, renderer, clock;
-  let player, cat, ground;
-  let cheeses = [], particles = [];
+  let scene, camera, renderer, clock, sun, hemi, ground;
+  let p1Mesh, p2Mesh, cat;
+  let players = [];
+  let cheeses = [], particles = [], powerups = [];
   let state = "start";          // start | playing | pounce | over | win
-  let score = 0, collected = 0;
-  let catSpeed = CAT_SPEED_BASE, elapsed = 0;
-  let pounceT = 0;
+  let score = 0, collected = 0, level = 1, numPlayers = 1, lastNumPlayers = 1;
+  let catSpeed = CAT_SPEED_BASE, elapsed = 0, levelTime = 0;
+  let pounceT = 0, pounceTarget = null;
   let menuAngle = 0;
+  let powerupSpawnT = POWERUP_EVERY;
+  let speedT = 0, magnetT = 0, shieldT = 0, catStun = 0;
+  let best = 0;
   const keys = {};
-  const joy = { x: 0, y: 0, active: false };
-  const camPos = new THREE.Vector3(0, 24, 26);
-  const tmp = new THREE.Vector3();
-  const camShake = new THREE.Vector3();
-
+  const joyL = { x: 0, y: 0, active: false };
+  const joyR = { x: 0, y: 0, active: false };
+  const tmp = new THREE.Vector3(), tmp2 = new THREE.Vector3();
+  const camShake = new THREE.Vector3(), camDesired = new THREE.Vector3(), camCenter = new THREE.Vector3();
   const isTouch = ("ontouchstart" in window) || navigator.maxTouchPoints > 0;
 
+  const WASD = { up: "w", down: "s", left: "a", right: "d" };
+  const ARROWS = { up: "arrowup", down: "arrowdown", left: "arrowleft", right: "arrowright" };
+
   // ---------------------------------------------------------------------------
-  // Audio (all synthesized — no sound files)
+  // High score (remembers your best)
+  // ---------------------------------------------------------------------------
+  function loadBest() { try { best = parseInt(localStorage.getItem("cheeseDashBest") || "0", 10) || 0; } catch (e) { best = 0; } }
+  function saveBest() { try { localStorage.setItem("cheeseDashBest", String(best)); } catch (e) {} }
+
+  // ---------------------------------------------------------------------------
+  // Audio (synthesized)
   // ---------------------------------------------------------------------------
   let actx = null, muted = false, musicTimer = null, musicStep = 0;
-  function initAudio() {
-    if (actx) return;
-    try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { actx = null; }
-  }
+  function initAudio() { if (actx) return; try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { actx = null; } }
   function tone(freq, dur, type, vol, when) {
     if (!actx || muted) return;
     const t = (when || actx.currentTime);
@@ -200,36 +278,38 @@
     o.connect(g).connect(actx.destination);
     o.start(t); o.stop(t + dur + 0.03);
   }
-  function sfxCollect() { tone(660, 0.12, "triangle", 0.25); tone(990, 0.16, "triangle", 0.2, actx ? actx.currentTime + 0.08 : 0); }
+  function sfxCollect() { tone(660, 0.12, "triangle", 0.22); tone(990, 0.16, "triangle", 0.18, actx ? actx.currentTime + 0.08 : 0); }
   function sfxCaught() { tone(300, 0.18, "sawtooth", 0.25); tone(170, 0.35, "sawtooth", 0.22, actx ? actx.currentTime + 0.12 : 0); }
-  function sfxWin() {
-    if (!actx) return; const base = actx.currentTime; const notes = [523, 659, 784, 1047];
-    notes.forEach((n, i) => tone(n, 0.3, "triangle", 0.25, base + i * 0.13));
-  }
+  function sfxPower() { if (!actx) return; const b = actx.currentTime; [523, 784, 1047].forEach((n, i) => tone(n, 0.18, "square", 0.16, b + i * 0.06)); }
+  function sfxLevel() { if (!actx) return; const b = actx.currentTime; [523, 659, 784, 1047, 1319].forEach((n, i) => tone(n, 0.22, "triangle", 0.2, b + i * 0.09)); }
+  function sfxWin() { if (!actx) return; const b = actx.currentTime; [523, 659, 784, 1047, 784, 1047, 1319].forEach((n, i) => tone(n, 0.3, "triangle", 0.22, b + i * 0.14)); }
   const MELODY = [523, 587, 659, 784, 659, 587, 523, 440, 523, 659, 784, 880, 784, 659, 587, 523];
   function startMusic() {
-    if (musicTimer || !actx) return;
-    musicStep = 0;
+    if (musicTimer || !actx) return; musicStep = 0;
     musicTimer = setInterval(() => {
       if (muted || !actx) return;
       const n = MELODY[musicStep % MELODY.length];
-      tone(n, 0.22, "sine", 0.05);
-      if (musicStep % 4 === 0) tone(n / 2, 0.3, "triangle", 0.04);
+      tone(n, 0.22, "sine", 0.045);
+      if (musicStep % 4 === 0) tone(n / 2, 0.3, "triangle", 0.035);
       musicStep++;
     }, 360);
   }
   function stopMusic() { if (musicTimer) { clearInterval(musicTimer); musicTimer = null; } }
 
+  // deterministic pseudo-random for stable layouts
+  let seed = 1337;
+  function rnd() { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; }
+
   // ---------------------------------------------------------------------------
-  // Scene setup
+  // Setup
   // ---------------------------------------------------------------------------
   function init() {
+    loadBest();
     scene = new THREE.Scene();
-    scene.background = makeSkyTexture();
     scene.fog = new THREE.Fog(0xbfeaff, 55, 95);
 
     camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 200);
-    camera.position.copy(camPos);
+    camera.position.set(0, 24, 26);
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -238,69 +318,84 @@
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     document.getElementById("game").appendChild(renderer.domElement);
 
-    // Lights
-    const amb = new THREE.HemisphereLight(0xffffff, 0x6b8f4e, 0.85);
-    scene.add(amb);
-    const sun = new THREE.DirectionalLight(0xfff4d6, 1.0);
-    sun.position.set(22, 34, 14);
-    sun.castShadow = true;
+    hemi = new THREE.HemisphereLight(0xffffff, 0x6b8f4e, 0.85); scene.add(hemi);
+    sun = new THREE.DirectionalLight(0xfff4d6, 1.0);
+    sun.position.set(22, 34, 14); sun.castShadow = true;
     sun.shadow.mapSize.set(2048, 2048);
     sun.shadow.camera.near = 1; sun.shadow.camera.far = 120;
     sun.shadow.camera.left = -45; sun.shadow.camera.right = 45;
     sun.shadow.camera.top = 45; sun.shadow.camera.bottom = -45;
-    sun.shadow.bias = -0.0004;
-    scene.add(sun);
+    sun.shadow.bias = -0.0004; scene.add(sun);
 
     buildGround();
     buildFence();
     scatterProps();
 
-    player = makeMouse(); scene.add(player);
+    p1Mesh = makeMouse(0x9aa3c0, 0xb9c0d8); scene.add(p1Mesh);
+    p2Mesh = makeMouse(0x5aa9ff, 0x9fd0ff); p2Mesh.visible = false; scene.add(p2Mesh);
     cat = makeCat(); scene.add(cat);
-    resetPositions();
 
+    // single player for the menu showcase (set BEFORE spawning cheese, which reads players)
+    players = [{ mesh: p1Mesh, joy: joyL, keysets: [WASD, ARROWS], alive: true }];
+
+    applyTheme(1);
+    p1Mesh.position.set(0, 0, 4); p1Mesh.rotation.y = Math.PI;
+    cat.position.set(0, 0, -16);
     for (let i = 0; i < CHEESE_ON_FIELD; i++) spawnCheese();
 
     clock = new THREE.Clock();
     bindEvents();
-    if (isTouch) { document.body.classList.add("touch"); document.getElementById("controlHint").textContent = "Use the joystick at the bottom to move"; }
-    document.getElementById("cheeseTarget").textContent = TARGET_CHEESE;
+    if (isTouch) document.body.classList.add("touch");
+    document.getElementById("levelMax").textContent = MAX_LEVEL;
+    refreshBestUI();
     document.getElementById("loadMsg").style.display = "none";
-
     animate();
   }
 
-  // ---------- Textures ----------
-  function makeSkyTexture() {
+  function refreshBestUI() {
+    document.getElementById("startBest").textContent = best;
+    document.getElementById("bestCount").textContent = best;
+  }
+
+  // ---------- Textures / theme ----------
+  function makeSkyTexture(theme) {
     const c = document.createElement("canvas"); c.width = 16; c.height = 256;
     const g = c.getContext("2d");
     const grd = g.createLinearGradient(0, 0, 0, 256);
-    grd.addColorStop(0, "#4aa6e8"); grd.addColorStop(0.55, "#8fd0f4"); grd.addColorStop(1, "#d9f3ff");
+    grd.addColorStop(0, theme.sky[0]); grd.addColorStop(0.55, theme.sky[1]); grd.addColorStop(1, theme.sky[2]);
     g.fillStyle = grd; g.fillRect(0, 0, 16, 256);
+    if (theme.name === "Night") { g.fillStyle = "#ffffff"; for (let i = 0; i < 60; i++) { const r = ((i * 9301 + 49297) % 233280) / 233280, r2 = ((i * 4099 + 7919) % 65521) / 65521; g.fillRect(r * 16, r2 * 150, 1, 1); } }
     const t = new THREE.CanvasTexture(c); t.magFilter = THREE.LinearFilter; return t;
   }
-  function makeGrassTexture() {
+  function makeGrassTexture(theme) {
     const c = document.createElement("canvas"); c.width = 256; c.height = 256;
     const g = c.getContext("2d");
-    g.fillStyle = "#7bd16a"; g.fillRect(0, 0, 256, 256);
-    // soft checker
-    g.fillStyle = "#74c863";
+    g.fillStyle = theme.gA; g.fillRect(0, 0, 256, 256);
+    g.fillStyle = theme.gB;
     for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) if ((x + y) % 2 === 0) g.fillRect(x * 32, y * 32, 32, 32);
-    // speckles
     for (let i = 0; i < 900; i++) {
-      const r = ((i * 9301 + 49297) % 233280) / 233280; const r2 = ((i * 4099 + 7919) % 65521) / 65521;
-      g.fillStyle = r > 0.5 ? "rgba(255,255,255,0.10)" : "rgba(40,110,40,0.12)";
+      const r = ((i * 9301 + 49297) % 233280) / 233280, r2 = ((i * 4099 + 7919) % 65521) / 65521;
+      g.fillStyle = r > 0.5 ? theme.spk1 : theme.spk2;
       g.fillRect(r * 256, r2 * 256, 3, 3);
     }
     const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(7, 7); return t;
   }
-
   function buildGround() {
     const geo = new THREE.PlaneGeometry(80, 80);
-    const mat = new THREE.MeshStandardMaterial({ map: makeGrassTexture(), roughness: 1 });
+    const mat = new THREE.MeshStandardMaterial({ roughness: 1 });
     ground = new THREE.Mesh(geo, mat);
     ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true;
     scene.add(ground);
+  }
+  function applyTheme(lv) {
+    const theme = THEMES[(lv - 1) % THEMES.length];
+    if (ground.material.map) ground.material.map.dispose();
+    ground.material.map = makeGrassTexture(theme); ground.material.needsUpdate = true;
+    if (scene.background) scene.background.dispose && scene.background.dispose();
+    scene.background = makeSkyTexture(theme);
+    scene.fog.color.set(theme.fog);
+    sun.intensity = theme.sun; hemi.intensity = theme.hemi;
+    hemi.groundColor.set(theme.hemiGround);
   }
 
   function buildFence() {
@@ -311,19 +406,11 @@
     const L = BOUNDS + 1.5;
     for (let s = -L; s <= L; s += 3.2) {
       [[s, L], [s, -L], [L, s], [-L, s]].forEach((p, i) => {
-        const post = new THREE.Mesh(postGeo, wood);
-        post.position.set(p[0], 0.8, p[1]); post.castShadow = true; scene.add(post);
-        const rail = new THREE.Mesh(railGeo, woodR);
-        rail.position.set(p[0], 0.9, p[1]);
-        if (i >= 2) rail.rotation.y = Math.PI / 2;
-        scene.add(rail);
+        const post = new THREE.Mesh(postGeo, wood); post.position.set(p[0], 0.8, p[1]); post.castShadow = true; scene.add(post);
+        const rail = new THREE.Mesh(railGeo, woodR); rail.position.set(p[0], 0.9, p[1]); if (i >= 2) rail.rotation.y = Math.PI / 2; scene.add(rail);
       });
     }
   }
-
-  // deterministic pseudo-random so layout is stable
-  let seed = 1337;
-  function rnd() { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; }
 
   function scatterProps() {
     const bushMat = new THREE.MeshStandardMaterial({ color: 0x4fae46, roughness: 1 });
@@ -337,41 +424,28 @@
     const trunkGeo = new THREE.CylinderGeometry(0.3, 0.4, 1.4, 6);
     const rockGeo = new THREE.DodecahedronGeometry(0.9, 0);
     const petalGeo = new THREE.SphereGeometry(0.18, 6, 6);
-
     for (let i = 0; i < 26; i++) {
-      const x = (rnd() * 2 - 1) * (BOUNDS - 2);
-      const z = (rnd() * 2 - 1) * (BOUNDS - 2);
-      if (Math.hypot(x, z) < 6) continue; // keep the center clear for the start
+      const x = (rnd() * 2 - 1) * (BOUNDS - 2), z = (rnd() * 2 - 1) * (BOUNDS - 2);
+      if (Math.hypot(x, z) < 6) continue;
       const kind = rnd();
-      if (kind < 0.4) {                 // bush cluster
+      if (kind < 0.4) {
         const g = new THREE.Group();
-        for (let b = 0; b < 3; b++) {
-          const m = new THREE.Mesh(sphereGeo, b % 2 ? bushMat2 : bushMat);
-          m.position.set((rnd() - 0.5) * 1.4, 0.5 + rnd() * 0.3, (rnd() - 0.5) * 1.4);
-          m.scale.setScalar(0.7 + rnd() * 0.6); m.castShadow = true; g.add(m);
-        }
+        for (let b = 0; b < 3; b++) { const m = new THREE.Mesh(sphereGeo, b % 2 ? bushMat2 : bushMat); m.position.set((rnd() - 0.5) * 1.4, 0.5 + rnd() * 0.3, (rnd() - 0.5) * 1.4); m.scale.setScalar(0.7 + rnd() * 0.6); m.castShadow = true; g.add(m); }
         g.position.set(x, 0, z); scene.add(g);
-      } else if (kind < 0.7) {          // tree
+      } else if (kind < 0.7) {
         const g = new THREE.Group();
         const trunk = new THREE.Mesh(trunkGeo, trunkMat); trunk.position.y = 0.7; trunk.castShadow = true; g.add(trunk);
         const leaves = new THREE.Mesh(coneGeo, leafMat); leaves.position.y = 2.6; leaves.castShadow = true; g.add(leaves);
         const leaves2 = new THREE.Mesh(coneGeo, leafMat); leaves2.position.y = 3.6; leaves2.scale.setScalar(0.7); leaves2.castShadow = true; g.add(leaves2);
         g.position.set(x, 0, z); g.scale.setScalar(0.8 + rnd() * 0.5); scene.add(g);
-      } else if (kind < 0.85) {         // rock
-        const m = new THREE.Mesh(rockGeo, rockMat);
-        m.position.set(x, 0.5, z); m.rotation.set(rnd(), rnd(), rnd()); m.scale.setScalar(0.6 + rnd()); m.castShadow = true; scene.add(m);
-      } else {                          // flower
+      } else if (kind < 0.85) {
+        const m = new THREE.Mesh(rockGeo, rockMat); m.position.set(x, 0.5, z); m.rotation.set(rnd(), rnd(), rnd()); m.scale.setScalar(0.6 + rnd()); m.castShadow = true; scene.add(m);
+      } else {
         const g = new THREE.Group();
-        const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.7, 4), leafMat);
-        stem.position.y = 0.35; g.add(stem);
+        const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.7, 4), leafMat); stem.position.y = 0.35; g.add(stem);
         const fm = flowerMats[(rnd() * flowerMats.length) | 0];
-        for (let p = 0; p < 5; p++) {
-          const petal = new THREE.Mesh(petalGeo, fm);
-          const a = p / 5 * Math.PI * 2;
-          petal.position.set(Math.cos(a) * 0.18, 0.72, Math.sin(a) * 0.18); g.add(petal);
-        }
-        const center = new THREE.Mesh(petalGeo, new THREE.MeshStandardMaterial({ color: 0xffe27a }));
-        center.position.y = 0.72; g.add(center);
+        for (let p = 0; p < 5; p++) { const petal = new THREE.Mesh(petalGeo, fm); const a = p / 5 * Math.PI * 2; petal.position.set(Math.cos(a) * 0.18, 0.72, Math.sin(a) * 0.18); g.add(petal); }
+        const center = new THREE.Mesh(petalGeo, new THREE.MeshStandardMaterial({ color: 0xffe27a })); center.position.y = 0.72; g.add(center);
         g.position.set(x, 0, z); scene.add(g);
       }
     }
@@ -380,40 +454,34 @@
   // ---------------------------------------------------------------------------
   // Characters
   // ---------------------------------------------------------------------------
-  function makeMouse() {
+  function makeMouse(furColor, furLightColor) {
     const g = new THREE.Group();
-    const fur = new THREE.MeshStandardMaterial({ color: 0x9aa3c0, roughness: 0.7 });
-    const furLight = new THREE.MeshStandardMaterial({ color: 0xb9c0d8, roughness: 0.7 });
+    const fur = new THREE.MeshStandardMaterial({ color: furColor, roughness: 0.7 });
+    const furLight = new THREE.MeshStandardMaterial({ color: furLightColor, roughness: 0.7 });
     const pink = new THREE.MeshStandardMaterial({ color: 0xff9ec2, roughness: 0.6 });
     const black = new THREE.MeshStandardMaterial({ color: 0x222230, roughness: 0.4 });
 
     const body = new THREE.Mesh(new THREE.SphereGeometry(0.62, 16, 16), fur);
     body.scale.set(1, 0.85, 1.25); body.position.y = 0.62; body.castShadow = true; g.add(body);
-
     const belly = new THREE.Mesh(new THREE.SphereGeometry(0.45, 12, 12), furLight);
     belly.scale.set(0.8, 0.6, 1); belly.position.set(0, 0.45, 0.35); g.add(belly);
-
     const head = new THREE.Mesh(new THREE.SphereGeometry(0.46, 16, 16), fur);
     head.position.set(0, 0.72, 0.7); head.castShadow = true; g.add(head);
-
     const earGeo = new THREE.SphereGeometry(0.26, 12, 12);
     [-1, 1].forEach(s => {
-      const ear = new THREE.Mesh(earGeo, fur); ear.scale.set(1, 1, 0.35);
-      ear.position.set(0.28 * s, 1.04, 0.62); ear.castShadow = true; g.add(ear);
-      const inner = new THREE.Mesh(earGeo, pink); inner.scale.set(0.6, 0.6, 0.25);
-      inner.position.set(0.28 * s, 1.04, 0.69); g.add(inner);
+      const ear = new THREE.Mesh(earGeo, fur); ear.scale.set(1, 1, 0.35); ear.position.set(0.28 * s, 1.04, 0.62); ear.castShadow = true; g.add(ear);
+      const inner = new THREE.Mesh(earGeo, pink); inner.scale.set(0.6, 0.6, 0.25); inner.position.set(0.28 * s, 1.04, 0.69); g.add(inner);
     });
-
     const eyeGeo = new THREE.SphereGeometry(0.07, 8, 8);
     [-1, 1].forEach(s => { const e = new THREE.Mesh(eyeGeo, black); e.position.set(0.17 * s, 0.78, 1.05); g.add(e); });
     const nose = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), pink); nose.position.set(0, 0.66, 1.16); g.add(nose);
+    const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.03, 1.3, 6), pink); tail.position.set(0, 0.7, -0.85); tail.rotation.x = -Math.PI / 3; g.add(tail);
 
-    // tail
-    const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.03, 1.3, 6), pink);
-    tail.position.set(0, 0.7, -0.85); tail.rotation.x = -Math.PI / 3; g.add(tail);
-    g.userData.tail = tail;
-    g.userData.body = body;
+    // shield bubble (hidden until shield power-up)
+    const bubble = new THREE.Mesh(new THREE.SphereGeometry(1.25, 16, 16), new THREE.MeshStandardMaterial({ color: 0x7fdfff, transparent: true, opacity: 0.32, emissive: 0x2299ff, emissiveIntensity: 0.4 }));
+    bubble.position.y = 0.7; bubble.visible = false; g.add(bubble);
 
+    g.userData.tail = tail; g.userData.body = body; g.userData.bubble = bubble;
     g.scale.setScalar(1.05);
     return g;
   }
@@ -427,48 +495,28 @@
     const eyeWhite = new THREE.MeshStandardMaterial({ color: 0xeafff0, roughness: 0.3 });
     const black = new THREE.MeshStandardMaterial({ color: 0x222230, roughness: 0.4 });
 
-    const body = new THREE.Mesh(new THREE.SphereGeometry(0.8, 18, 18), fur);
-    body.scale.set(1, 0.92, 1.35); body.position.y = 0.82; body.castShadow = true; g.add(body);
-
-    const belly = new THREE.Mesh(new THREE.SphereGeometry(0.6, 14, 14), cream);
-    belly.scale.set(0.8, 0.62, 1); belly.position.set(0, 0.6, 0.4); g.add(belly);
-
-    // stripes
+    const body = new THREE.Mesh(new THREE.SphereGeometry(0.8, 18, 18), fur); body.scale.set(1, 0.92, 1.35); body.position.y = 0.82; body.castShadow = true; g.add(body);
+    const belly = new THREE.Mesh(new THREE.SphereGeometry(0.6, 14, 14), cream); belly.scale.set(0.8, 0.62, 1); belly.position.set(0, 0.6, 0.4); g.add(belly);
     const stripeGeo = new THREE.BoxGeometry(0.9, 0.12, 0.18);
-    for (let i = 0; i < 3; i++) { const s = new THREE.Mesh(stripeGeo, furDark); s.position.set(0, 1.25 - i * 0.05, -0.2 - i * 0.35); s.rotation.z = 0; g.add(s); }
-
-    const head = new THREE.Mesh(new THREE.SphereGeometry(0.6, 18, 18), fur);
-    head.position.set(0, 1.0, 0.95); head.castShadow = true; g.add(head);
-
-    // ears (triangular cones)
+    for (let i = 0; i < 3; i++) { const s = new THREE.Mesh(stripeGeo, furDark); s.position.set(0, 1.25 - i * 0.05, -0.2 - i * 0.35); g.add(s); }
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.6, 18, 18), fur); head.position.set(0, 1.0, 0.95); head.castShadow = true; g.add(head);
     const earGeo = new THREE.ConeGeometry(0.28, 0.5, 4);
     [-1, 1].forEach(s => {
       const ear = new THREE.Mesh(earGeo, fur); ear.position.set(0.32 * s, 1.5, 0.85); ear.rotation.y = Math.PI / 4; ear.castShadow = true; g.add(ear);
       const inner = new THREE.Mesh(new THREE.ConeGeometry(0.15, 0.3, 4), pink); inner.position.set(0.32 * s, 1.48, 0.9); inner.rotation.y = Math.PI / 4; g.add(inner);
     });
-
-    // eyes
     [-1, 1].forEach(s => {
       const w = new THREE.Mesh(new THREE.SphereGeometry(0.14, 10, 10), eyeWhite); w.scale.set(1, 1.2, 0.6); w.position.set(0.22 * s, 1.08, 1.42); g.add(w);
       const p = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 8), black); p.scale.set(0.6, 1.3, 1); p.position.set(0.22 * s, 1.08, 1.5); g.add(p);
     });
     const nose = new THREE.Mesh(new THREE.SphereGeometry(0.1, 8, 8), pink); nose.position.set(0, 0.92, 1.55); g.add(nose);
-
-    // whiskers
-    const wMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
-    const wGeo = new THREE.CylinderGeometry(0.012, 0.012, 0.7, 4);
+    const wMat = new THREE.MeshStandardMaterial({ color: 0xffffff }); const wGeo = new THREE.CylinderGeometry(0.012, 0.012, 0.7, 4);
     [-1, 1].forEach(s => { for (let k = -1; k <= 1; k++) { const w = new THREE.Mesh(wGeo, wMat); w.position.set(0.35 * s, 0.92 + k * 0.07, 1.4); w.rotation.z = Math.PI / 2; w.rotation.y = 0.3 * s; g.add(w); } });
-
-    // paws
     const pawGeo = new THREE.SphereGeometry(0.18, 8, 8);
     [[-0.35, 0.55], [0.35, 0.55], [-0.35, -0.45], [0.35, -0.45]].forEach(p => { const paw = new THREE.Mesh(pawGeo, cream); paw.position.set(p[0], 0.18, p[1]); paw.castShadow = true; g.add(paw); });
+    const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.06, 1.6, 8), fur); tail.position.set(0, 1.0, -1.0); tail.rotation.x = -Math.PI / 2.4; tail.castShadow = true; g.add(tail);
 
-    // tail
-    const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.06, 1.6, 8), fur);
-    tail.position.set(0, 1.0, -1.0); tail.rotation.x = -Math.PI / 2.4; tail.castShadow = true; g.add(tail);
-    g.userData.tail = tail;
-    g.userData.body = body;
-
+    g.userData.tail = tail; g.userData.body = body;
     g.scale.setScalar(1.15);
     return g;
   }
@@ -480,62 +528,104 @@
   const cheeseMat = new THREE.MeshStandardMaterial({ color: 0xffce3a, roughness: 0.55, emissive: 0x6b4e00, emissiveIntensity: 0.15 });
   const holeMat = new THREE.MeshStandardMaterial({ color: 0xf0a800, roughness: 0.7 });
   const holeGeo = new THREE.SphereGeometry(0.08, 8, 8);
-
   function spawnCheese() {
     const g = new THREE.Group();
     const wedge = new THREE.Mesh(cheeseGeo, cheeseMat); wedge.castShadow = true; g.add(wedge);
     for (let i = 0; i < 3; i++) { const h = new THREE.Mesh(holeGeo, holeMat); h.position.set((rnd() - 0.5) * 0.5, (rnd() - 0.3) * 0.2, (rnd() - 0.2) * 0.4); g.add(h); }
-    placeCheese(g);
-    g.userData.spin = rnd() * Math.PI * 2;
-    scene.add(g); cheeses.push(g);
-    return g;
+    placeAway(g, 5); g.position.y = 0.9; g.userData.spin = rnd() * Math.PI * 2;
+    scene.add(g); cheeses.push(g); return g;
   }
-  function placeCheese(g) {
-    let x, z, tries = 0;
-    do { x = (rnd() * 2 - 1) * (BOUNDS - 2); z = (rnd() * 2 - 1) * (BOUNDS - 2); tries++; }
-    while (tries < 30 && (Math.hypot(x - player.position.x, z - player.position.z) < 5 || Math.hypot(x - cat.position.x, z - cat.position.z) < 5));
-    g.position.set(x, 0.9, z);
+  function placeAway(obj, minDist) {
+    let x, z, ok, tries = 0;
+    do {
+      x = (rnd() * 2 - 1) * (BOUNDS - 2); z = (rnd() * 2 - 1) * (BOUNDS - 2); ok = true; tries++;
+      for (const p of players) if (Math.hypot(x - p.mesh.position.x, z - p.mesh.position.z) < minDist) ok = false;
+      if (Math.hypot(x - cat.position.x, z - cat.position.z) < minDist) ok = false;
+    } while (!ok && tries < 30);
+    obj.position.x = x; obj.position.z = z;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Power-ups
+  // ---------------------------------------------------------------------------
+  const PWR_TYPES = [
+    { key: "speed", color: 0x33e0ff, emoji: "⚡", label: "Super Speed!" },
+    { key: "magnet", color: 0xc77dff, emoji: "🧲", label: "Cheese Magnet!" },
+    { key: "shield", color: 0xffd23f, emoji: "🛡️", label: "Shield!" },
+  ];
+  const ringGeo = new THREE.TorusGeometry(0.55, 0.1, 10, 24);
+  const coreGeo = new THREE.SphereGeometry(0.32, 16, 16);
+  function makeEmojiSprite(emoji) {
+    const c = document.createElement("canvas"); c.width = c.height = 128;
+    const g = c.getContext("2d"); g.font = "96px serif"; g.textAlign = "center"; g.textBaseline = "middle";
+    g.fillText(emoji, 64, 70);
+    const tex = new THREE.CanvasTexture(c);
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true }));
+    sp.scale.set(1.3, 1.3, 1.3); return sp;
+  }
+  function spawnPowerup() {
+    const type = PWR_TYPES[(rnd() * PWR_TYPES.length) | 0];
+    const g = new THREE.Group();
+    const ring = new THREE.Mesh(ringGeo, new THREE.MeshStandardMaterial({ color: type.color, emissive: type.color, emissiveIntensity: 0.6, roughness: 0.3 }));
+    ring.rotation.x = Math.PI / 2; g.add(ring);
+    const core = new THREE.Mesh(coreGeo, new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: type.color, emissiveIntensity: 0.8, roughness: 0.2 })); g.add(core);
+    const sp = makeEmojiSprite(type.emoji); sp.position.y = 1.3; g.add(sp);
+    placeAway(g, 7); g.position.y = 1.1; g.userData = { type: type, life: POWERUP_LIFE, spin: 0, sprite: sp };
+    scene.add(g); powerups.push(g);
+  }
+  function activatePowerup(type) {
+    if (type.key === "speed") speedT = SPEED_TIME;
+    else if (type.key === "magnet") magnetT = MAGNET_TIME;
+    else if (type.key === "shield") { shieldT = SHIELD_TIME; catStun = Math.max(catStun, 1.2); }
+    sfxPower();
+    showBanner(type.emoji + " " + type.label, "#fff");
   }
 
   // ---------------------------------------------------------------------------
   // Particles
   // ---------------------------------------------------------------------------
   const partGeo = new THREE.SphereGeometry(0.13, 6, 6);
-  const partMat = new THREE.MeshStandardMaterial({ color: 0xffd23f, emissive: 0xffb000, emissiveIntensity: 0.4 });
-  function burst(pos) {
-    for (let i = 0; i < 16; i++) {
-      const m = new THREE.Mesh(partGeo, partMat);
-      m.position.copy(pos);
+  const partMatGold = new THREE.MeshStandardMaterial({ color: 0xffd23f, emissive: 0xffb000, emissiveIntensity: 0.4 });
+  const partMatCyan = new THREE.MeshStandardMaterial({ color: 0x7fe9ff, emissive: 0x33c0ff, emissiveIntensity: 0.5 });
+  function burst(pos, mat, n) {
+    for (let i = 0; i < (n || 16); i++) {
+      const m = new THREE.Mesh(partGeo, mat || partMatGold); m.position.copy(pos);
       const a = rnd() * Math.PI * 2, sp = 3 + rnd() * 4;
-      m.userData.v = new THREE.Vector3(Math.cos(a) * sp, 4 + rnd() * 4, Math.sin(a) * sp);
-      m.userData.life = 0.7;
+      m.userData = { v: new THREE.Vector3(Math.cos(a) * sp, 4 + rnd() * 4, Math.sin(a) * sp), life: 0.7 };
       scene.add(m); particles.push(m);
     }
+  }
+  function trailPuff(pos) {
+    const m = new THREE.Mesh(partGeo, partMatCyan); m.position.copy(pos); m.position.y = 0.5;
+    m.userData = { v: new THREE.Vector3((rnd() - 0.5) * 1.5, 1 + rnd(), (rnd() - 0.5) * 1.5), life: 0.4 };
+    scene.add(m); particles.push(m);
   }
   function updateParticles(dt) {
     for (let i = particles.length - 1; i >= 0; i--) {
       const p = particles[i]; p.userData.life -= dt;
       if (p.userData.life <= 0) { scene.remove(p); particles.splice(i, 1); continue; }
-      p.userData.v.y -= 14 * dt;
-      p.position.addScaledVector(p.userData.v, dt);
-      const s = Math.max(0.01, p.userData.life / 0.7);
-      p.scale.setScalar(s);
+      p.userData.v.y -= 14 * dt; p.position.addScaledVector(p.userData.v, dt);
+      p.scale.setScalar(Math.max(0.01, p.userData.life / 0.7));
     }
   }
 
   // ---------------------------------------------------------------------------
-  // Score popups (DOM)
+  // UI helpers
   // ---------------------------------------------------------------------------
   function popup(world, text) {
     tmp.copy(world).project(camera);
-    const x = (tmp.x * 0.5 + 0.5) * window.innerWidth;
-    const y = (-tmp.y * 0.5 + 0.5) * window.innerHeight;
-    const el = document.createElement("div");
-    el.className = "pop"; el.textContent = text;
-    el.style.left = x + "px"; el.style.top = y + "px";
-    document.body.appendChild(el);
+    const x = (tmp.x * 0.5 + 0.5) * window.innerWidth, y = (-tmp.y * 0.5 + 0.5) * window.innerHeight;
+    const el = document.createElement("div"); el.className = "pop"; el.textContent = text;
+    el.style.left = x + "px"; el.style.top = y + "px"; document.body.appendChild(el);
     requestAnimationFrame(() => { el.style.transform = "translate(-50%,-50%) translateY(-70px) scale(1.4)"; el.style.opacity = "0"; });
     setTimeout(() => el.remove(), 850);
+  }
+  let bannerTimer = null;
+  function showBanner(text, color) {
+    const b = document.getElementById("banner"); b.textContent = text; b.style.color = color || "#fff";
+    b.classList.add("show"); b.style.transform = "translate(-50%,-50%) scale(1.05)";
+    if (bannerTimer) clearTimeout(bannerTimer);
+    bannerTimer = setTimeout(() => { b.classList.remove("show"); }, 1400);
   }
 
   // ---------------------------------------------------------------------------
@@ -548,212 +638,280 @@
       if (["arrowup", "arrowdown", "arrowleft", "arrowright", " "].includes(e.key.toLowerCase())) e.preventDefault();
     }, { passive: false });
     window.addEventListener("keyup", e => { keys[e.key.toLowerCase()] = false; });
-
-    document.getElementById("playBtn").addEventListener("click", startGame);
-    document.getElementById("retryBtn").addEventListener("click", startGame);
-    document.getElementById("winBtn").addEventListener("click", startGame);
+    document.getElementById("play1Btn").addEventListener("click", () => startGame(1));
+    document.getElementById("play2Btn").addEventListener("click", () => startGame(2));
+    document.getElementById("retryBtn").addEventListener("click", () => startGame(lastNumPlayers));
+    document.getElementById("winBtn").addEventListener("click", () => startGame(lastNumPlayers));
+    document.getElementById("menuBtn").addEventListener("click", showStart);
+    document.getElementById("winMenuBtn").addEventListener("click", showStart);
     document.getElementById("muteBtn").addEventListener("click", toggleMute);
-
-    setupJoystick();
-    // stop the page from scrolling/zooming on touch
+    setupJoystick("joystick", joyL);
+    setupJoystick("joystick2", joyR);
     document.addEventListener("touchmove", e => { if (e.target.tagName !== "INPUT") e.preventDefault(); }, { passive: false });
     document.addEventListener("gesturestart", e => e.preventDefault());
   }
-
-  function setupJoystick() {
-    const base = document.getElementById("joystick"), knob = document.getElementById("knob");
-    const R = 50; let id = null;
-    function setFrom(clientX, clientY) {
-      const r = base.getBoundingClientRect();
-      let dx = clientX - (r.left + r.width / 2);
-      let dy = clientY - (r.top + r.height / 2);
-      const len = Math.hypot(dx, dy);
-      if (len > R) { dx = dx / len * R; dy = dy / len * R; }
-      knob.style.transform = "translate(" + dx + "px," + dy + "px)";
-      joy.x = dx / R; joy.y = dy / R; joy.active = true;
+  function setupJoystick(id, joy) {
+    const base = document.getElementById(id), knob = base.querySelector(".knob"); const R = 48; let tid = null;
+    function setFrom(cx, cy) {
+      const r = base.getBoundingClientRect(); let dx = cx - (r.left + r.width / 2), dy = cy - (r.top + r.height / 2);
+      const len = Math.hypot(dx, dy); if (len > R) { dx = dx / len * R; dy = dy / len * R; }
+      knob.style.transform = "translate(" + dx + "px," + dy + "px)"; joy.x = dx / R; joy.y = dy / R; joy.active = true;
     }
-    function reset() { joy.x = 0; joy.y = 0; joy.active = false; knob.style.transform = "translate(0,0)"; id = null; }
-    base.addEventListener("touchstart", e => { e.preventDefault(); const t = e.changedTouches[0]; id = t.identifier; setFrom(t.clientX, t.clientY); }, { passive: false });
-    base.addEventListener("touchmove", e => { e.preventDefault(); for (const t of e.changedTouches) if (t.identifier === id) setFrom(t.clientX, t.clientY); }, { passive: false });
-    base.addEventListener("touchend", e => { for (const t of e.changedTouches) if (t.identifier === id) reset(); }, { passive: false });
+    function reset() { joy.x = 0; joy.y = 0; joy.active = false; knob.style.transform = "translate(0,0)"; tid = null; }
+    base.addEventListener("touchstart", e => { e.preventDefault(); const t = e.changedTouches[0]; tid = t.identifier; setFrom(t.clientX, t.clientY); }, { passive: false });
+    base.addEventListener("touchmove", e => { e.preventDefault(); for (const t of e.changedTouches) if (t.identifier === tid) setFrom(t.clientX, t.clientY); }, { passive: false });
+    base.addEventListener("touchend", e => { for (const t of e.changedTouches) if (t.identifier === tid) reset(); }, { passive: false });
     base.addEventListener("touchcancel", reset, { passive: false });
-    // also allow mouse drag on the joystick (for testing on desktop)
-    let mdown = false;
-    base.addEventListener("mousedown", e => { mdown = true; setFrom(e.clientX, e.clientY); });
-    window.addEventListener("mousemove", e => { if (mdown) setFrom(e.clientX, e.clientY); });
-    window.addEventListener("mouseup", () => { if (mdown) { mdown = false; reset(); } });
+    let md = false;
+    base.addEventListener("mousedown", e => { md = true; setFrom(e.clientX, e.clientY); });
+    window.addEventListener("mousemove", e => { if (md) setFrom(e.clientX, e.clientY); });
+    window.addEventListener("mouseup", () => { if (md) { md = false; reset(); } });
   }
-
-  function toggleMute() {
-    muted = !muted;
-    document.getElementById("muteBtn").textContent = muted ? "🔇" : "🔊";
-  }
-
-  function onResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  }
+  function toggleMute() { muted = !muted; document.getElementById("muteBtn").textContent = muted ? "🔇" : "🔊"; }
+  function onResize() { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); }
 
   // ---------------------------------------------------------------------------
   // Game flow
   // ---------------------------------------------------------------------------
-  function resetPositions() {
-    player.position.set(0, 0, 4); player.rotation.y = Math.PI;
-    cat.position.set(0, 0, -16); cat.rotation.y = 0;
-  }
-
-  function startGame() {
-    initAudio();
-    if (actx && actx.state === "suspended") actx.resume();
-    startMusic();
-
-    score = 0; collected = 0; catSpeed = CAT_SPEED_BASE; elapsed = 0;
-    resetPositions();
+  function clearField() {
     cheeses.forEach(c => scene.remove(c)); cheeses = [];
     particles.forEach(p => scene.remove(p)); particles = [];
+    powerups.forEach(p => scene.remove(p)); powerups = [];
+  }
+  function placePlayers() {
+    if (numPlayers === 1) { players[0].mesh.position.set(0, 0, 4); players[0].mesh.rotation.y = Math.PI; }
+    else {
+      players[0].mesh.position.set(-3.5, 0, 4); players[0].mesh.rotation.y = Math.PI;
+      players[1].mesh.position.set(3.5, 0, 4); players[1].mesh.rotation.y = Math.PI;
+    }
+    cat.position.set(0, 0, -16); cat.rotation.y = 0; cat.scale.setScalar(1.15);
+  }
+
+  function startGame(np) {
+    initAudio(); if (actx && actx.state === "suspended") actx.resume(); startMusic();
+    numPlayers = np; lastNumPlayers = np;
+    document.body.classList.toggle("twoplayer", np === 2);
+
+    players = [];
+    players.push({ mesh: p1Mesh, joy: joyL, keysets: np === 2 ? [WASD] : [WASD, ARROWS], alive: true });
+    if (np === 2) players.push({ mesh: p2Mesh, joy: joyR, keysets: [ARROWS], alive: true });
+    p1Mesh.visible = true; p2Mesh.visible = (np === 2);
+
+    score = 0; collected = 0; level = 1; elapsed = 0; levelTime = 0;
+    catSpeed = catBaseFor(1); speedT = magnetT = shieldT = catStun = 0; powerupSpawnT = POWERUP_EVERY;
+    p1Mesh.userData.bubble.visible = false; p2Mesh.userData.bubble.visible = false;
+
+    applyTheme(1);
+    clearField(); placePlayers();
     for (let i = 0; i < CHEESE_ON_FIELD; i++) spawnCheese();
-    cat.scale.setScalar(1.15);
 
     document.getElementById("startScreen").classList.add("hidden");
     document.getElementById("overScreen").classList.add("hidden");
     document.getElementById("winScreen").classList.add("hidden");
     document.getElementById("hud").style.display = "flex";
-    updateHUD();
-    state = "playing";
+    updateHUD(); state = "playing";
   }
+
+  function showStart() {
+    state = "start"; numPlayers = 1; document.body.classList.remove("twoplayer");
+    players = [{ mesh: p1Mesh, joy: joyL, keysets: [WASD, ARROWS], alive: true }];
+    p2Mesh.visible = false; p1Mesh.visible = true;
+    p1Mesh.userData.bubble.visible = false;
+    speedT = magnetT = shieldT = 0;
+    applyTheme(1); clearField(); placePlayers();
+    for (let i = 0; i < CHEESE_ON_FIELD; i++) spawnCheese();
+    document.getElementById("hud").style.display = "none";
+    document.getElementById("powerups").innerHTML = "";
+    document.getElementById("overScreen").classList.add("hidden");
+    document.getElementById("winScreen").classList.add("hidden");
+    document.getElementById("startScreen").classList.remove("hidden");
+    refreshBestUI();
+  }
+
+  function levelUp() {
+    level++; collected = 0; levelTime = 0; catSpeed = catBaseFor(level);
+    applyTheme(level);
+    clearField(); for (let i = 0; i < CHEESE_ON_FIELD; i++) spawnCheese();
+    const theme = THEMES[(level - 1) % THEMES.length];
+    sfxLevel(); showBanner("Level " + level + "  •  " + theme.name + "!", "#ffd23f");
+    updateHUD();
+  }
+
+  function checkBest() { if (score > best) { best = score; saveBest(); refreshBestUI(); return true; } return false; }
 
   function endGame(win) {
     state = win ? "win" : "over";
+    const newBest = checkBest();
     document.getElementById("hud").style.display = "none";
+    document.getElementById("powerups").innerHTML = "";
     if (win) {
       sfxWin();
-      document.getElementById("winScore").textContent = "You got all " + TARGET_CHEESE + " cheese!  ⭐ " + score;
+      document.getElementById("winScore").textContent = "Final Score  ⭐ " + score;
+      document.getElementById("winBest").innerHTML = newBest ? '<span class="newbest">⭐ NEW BEST: ' + best + '! ⭐</span>' : "🏆 Best: " + best;
       document.getElementById("winScreen").classList.remove("hidden");
     } else {
-      document.getElementById("overScore").textContent = "You got " + collected + " cheese  ⭐ " + score;
+      document.getElementById("overScore").textContent = "Level " + level + "  •  ⭐ " + score;
+      document.getElementById("overBest").innerHTML = newBest ? '<span class="newbest">⭐ NEW BEST: ' + best + '! ⭐</span>' : "🏆 Best: " + best;
       document.getElementById("overScreen").classList.remove("hidden");
     }
   }
 
   function updateHUD() {
     document.getElementById("cheeseCount").textContent = collected;
+    document.getElementById("cheeseTarget").textContent = levelTarget(level);
+    document.getElementById("levelCount").textContent = level;
     document.getElementById("scoreCount").textContent = score;
+    document.getElementById("bestCount").textContent = best;
+  }
+  function updatePowerHUD() {
+    const el = document.getElementById("powerups"); let html = "";
+    if (speedT > 0) html += '<div class="pwr">⚡ ' + Math.ceil(speedT) + '</div>';
+    if (magnetT > 0) html += '<div class="pwr">🧲 ' + Math.ceil(magnetT) + '</div>';
+    if (shieldT > 0) html += '<div class="pwr">🛡️ ' + Math.ceil(shieldT) + '</div>';
+    el.innerHTML = html;
   }
 
   // ---------------------------------------------------------------------------
   // Per-frame update
   // ---------------------------------------------------------------------------
-  function getMoveDir() {
+  function getMoveDir(p) {
     let x = 0, z = 0;
-    if (keys["arrowup"] || keys["w"]) z -= 1;
-    if (keys["arrowdown"] || keys["s"]) z += 1;
-    if (keys["arrowleft"] || keys["a"]) x -= 1;
-    if (keys["arrowright"] || keys["d"]) x += 1;
-    if (joy.active) { x += joy.x; z += joy.y; }
-    const len = Math.hypot(x, z);
-    if (len > 1) { x /= len; z /= len; }
+    for (const k of p.keysets) {
+      if (keys[k.up]) z -= 1; if (keys[k.down]) z += 1; if (keys[k.left]) x -= 1; if (keys[k.right]) x += 1;
+    }
+    if (p.joy.active) { x += p.joy.x; z += p.joy.y; }
+    const len = Math.hypot(x, z); if (len > 1) { x /= len; z /= len; }
     return { x, z, len: Math.min(1, len) };
   }
 
   function update(dt) {
-    elapsed += dt;
-    const d = getMoveDir();
-    const moving = d.len > 0.05;
-
-    // move mouse
-    if (moving) {
-      player.position.x += d.x * PLAYER_SPEED * dt;
-      player.position.z += d.z * PLAYER_SPEED * dt;
-      player.position.x = THREE.MathUtils.clamp(player.position.x, -BOUNDS, BOUNDS);
-      player.position.z = THREE.MathUtils.clamp(player.position.z, -BOUNDS, BOUNDS);
-      const targetRot = Math.atan2(d.x, d.z);
-      player.rotation.y = lerpAngle(player.rotation.y, targetRot, 0.25);
-    }
-    // mouse bob + tail wiggle
+    elapsed += dt; levelTime += dt;
     const t = elapsed;
-    player.userData.body.position.y = 0.62 + (moving ? Math.abs(Math.sin(t * 14)) * 0.12 : Math.sin(t * 2) * 0.03);
-    player.userData.tail.rotation.z = Math.sin(t * 12) * (moving ? 0.5 : 0.2);
+    const spd = PLAYER_SPEED * (speedT > 0 ? SPEED_MULT : 1);
 
-    // move cat toward mouse
-    tmp.set(player.position.x - cat.position.x, 0, player.position.z - cat.position.z);
-    const dist = tmp.length();
-    if (dist > 0.001) {
-      tmp.normalize();
-      cat.position.x += tmp.x * catSpeed * dt;
-      cat.position.z += tmp.z * catSpeed * dt;
-      cat.rotation.y = lerpAngle(cat.rotation.y, Math.atan2(tmp.x, tmp.z), 0.15);
+    // players
+    for (const p of players) {
+      const m = p.mesh, d = getMoveDir(p), moving = d.len > 0.05;
+      if (moving) {
+        m.position.x = THREE.MathUtils.clamp(m.position.x + d.x * spd * dt, -BOUNDS, BOUNDS);
+        m.position.z = THREE.MathUtils.clamp(m.position.z + d.z * spd * dt, -BOUNDS, BOUNDS);
+        m.rotation.y = lerpAngle(m.rotation.y, Math.atan2(d.x, d.z), 0.25);
+        if (speedT > 0 && rnd() < 0.6) trailPuff(m.position);
+      }
+      m.userData.body.position.y = 0.62 + (moving ? Math.abs(Math.sin(t * 14)) * 0.12 : Math.sin(t * 2) * 0.03);
+      m.userData.tail.rotation.z = Math.sin(t * 12) * (moving ? 0.5 : 0.2);
+      m.userData.bubble.visible = shieldT > 0;
+      if (shieldT > 0) m.userData.bubble.scale.setScalar(1 + Math.sin(t * 8) * 0.05);
+    }
+
+    // cat chases nearest alive player
+    let target = null, bestD = Infinity;
+    for (const p of players) { const dd = Math.hypot(p.mesh.position.x - cat.position.x, p.mesh.position.z - cat.position.z); if (dd < bestD) { bestD = dd; target = p; } }
+    if (catStun > 0) catStun -= dt;
+    if (target) {
+      tmp.set(target.mesh.position.x - cat.position.x, 0, target.mesh.position.z - cat.position.z);
+      const dist = tmp.length();
+      if (dist > 0.001) {
+        tmp.normalize();
+        const cs = catStun > 0 ? catSpeed * 0.25 : catSpeed;
+        cat.position.x += tmp.x * cs * dt; cat.position.z += tmp.z * cs * dt;
+        cat.rotation.y = lerpAngle(cat.rotation.y, Math.atan2(tmp.x, tmp.z), 0.15);
+      }
     }
     cat.userData.body.position.y = 0.82 + Math.abs(Math.sin(t * 12)) * 0.14;
     cat.userData.tail.rotation.z = Math.sin(t * 8) * 0.5;
-
-    // difficulty creep over time
     catSpeed = Math.min(CAT_SPEED_MAX, catSpeed + CAT_RAMP_PER_SEC * dt);
 
-    // cheese: spin, float, collect
+    // power-up timers
+    if (speedT > 0) speedT = Math.max(0, speedT - dt);
+    if (magnetT > 0) magnetT = Math.max(0, magnetT - dt);
+    if (shieldT > 0) shieldT = Math.max(0, shieldT - dt);
+
+    // power-up spawning
+    powerupSpawnT -= dt;
+    if (powerupSpawnT <= 0 && powerups.length === 0) { spawnPowerup(); powerupSpawnT = POWERUP_EVERY; }
+    for (let i = powerups.length - 1; i >= 0; i--) {
+      const pu = powerups[i]; pu.userData.life -= dt; pu.userData.spin += dt * 2;
+      pu.rotation.y = pu.userData.spin; pu.position.y = 1.1 + Math.sin(t * 3) * 0.12;
+      let grabbed = false;
+      for (const p of players) if (Math.hypot(pu.position.x - p.mesh.position.x, pu.position.z - p.mesh.position.z) < COLLECT_DIST + 0.3) grabbed = true;
+      if (grabbed) { burst(pu.position, partMatGold, 18); activatePowerup(pu.userData.type); if (pu.userData.sprite.material.map) pu.userData.sprite.material.map.dispose(); scene.remove(pu); powerups.splice(i, 1); }
+      else if (pu.userData.life <= 0) { if (pu.userData.sprite.material.map) pu.userData.sprite.material.map.dispose(); scene.remove(pu); powerups.splice(i, 1); }
+    }
+
+    // cheese: spin/float, magnet pull, collect
     for (let i = cheeses.length - 1; i >= 0; i--) {
       const c = cheeses[i];
-      c.userData.spin += dt * 2;
-      c.rotation.y = c.userData.spin;
+      c.userData.spin += dt * 2; c.rotation.y = c.userData.spin;
       c.position.y = 0.9 + Math.sin(t * 3 + c.userData.spin) * 0.12;
-      if (Math.hypot(c.position.x - player.position.x, c.position.z - player.position.z) < COLLECT_DIST) {
-        burst(c.position);
-        const bonus = 10;
-        score += bonus; collected++;
-        popup(c.position, "+" + bonus);
-        sfxCollect();
+      // find nearest player
+      let np = null, nd = Infinity;
+      for (const p of players) { const dd = Math.hypot(c.position.x - p.mesh.position.x, c.position.z - p.mesh.position.z); if (dd < nd) { nd = dd; np = p; } }
+      if (magnetT > 0 && np && nd < MAGNET_RADIUS) {
+        tmp2.set(np.mesh.position.x - c.position.x, 0, np.mesh.position.z - c.position.z).normalize();
+        c.position.x += tmp2.x * MAGNET_PULL * dt; c.position.z += tmp2.z * MAGNET_PULL * dt;
+      }
+      if (np && nd < COLLECT_DIST) {
+        burst(c.position, partMatGold); score += 10; collected++;
+        popup(c.position, "+10"); sfxCollect();
         catSpeed = Math.min(CAT_SPEED_MAX, catSpeed + CAT_RAMP_PER_CHEESE);
-        scene.remove(c); cheeses.splice(i, 1);
-        updateHUD();
-        if (collected >= TARGET_CHEESE) { endGame(true); return; }
-        if (cheeses.length < CHEESE_ON_FIELD) spawnCheese();
+        scene.remove(c); cheeses.splice(i, 1); updateHUD();
+        if (collected >= levelTarget(level)) { if (level >= MAX_LEVEL) { endGame(true); return; } else { levelUp(); } }
+        else if (cheeses.length < CHEESE_ON_FIELD) spawnCheese();
       }
     }
 
-    // caught?
-    if (dist < CATCH_DIST) { state = "pounce"; pounceT = 0; sfxCaught(); }
+    // caught? (shield protects + bounces cat)
+    if (target && bestD < CATCH_DIST) {
+      if (shieldT > 0) {
+        tmp.set(cat.position.x - target.mesh.position.x, 0, cat.position.z - target.mesh.position.z).normalize();
+        cat.position.x = target.mesh.position.x + tmp.x * (CATCH_DIST + 1.2);
+        cat.position.z = target.mesh.position.z + tmp.z * (CATCH_DIST + 1.2);
+        catStun = 0.8;
+      } else {
+        state = "pounce"; pounceT = 0; pounceTarget = target; sfxCaught();
+      }
+    }
 
-    updateParticles(dt);
-    updateChaseCam(dt);
+    updateParticles(dt); updatePowerHUD(); updateChaseCam(dt);
   }
 
   function updatePounce(dt) {
     pounceT += dt;
-    // cat lunges onto the mouse + camera shake
-    tmp.set(player.position.x - cat.position.x, 0, player.position.z - cat.position.z);
-    cat.position.addScaledVector(tmp, Math.min(1, dt * 6));
+    if (pounceTarget) {
+      tmp.set(pounceTarget.mesh.position.x - cat.position.x, 0, pounceTarget.mesh.position.z - cat.position.z);
+      cat.position.addScaledVector(tmp, Math.min(1, dt * 6));
+    }
     cat.scale.setScalar(1.15 + Math.sin(pounceT * 18) * 0.12);
     camShake.set((rnd() - 0.5) * 1.2, (rnd() - 0.5) * 1.2, (rnd() - 0.5) * 1.2).multiplyScalar(Math.max(0, 1 - pounceT));
-    updateChaseCam(dt);
-    if (pounceT > 0.7) { camShake.set(0, 0, 0); endGame(false); }
+    updateParticles(dt); updateChaseCam(dt);
+    if (pounceT > 0.7) { camShake.set(0, 0, 0); cat.scale.setScalar(1.15); endGame(false); }
   }
 
-  const camDesired = new THREE.Vector3();
   function updateChaseCam(dt) {
-    // smooth third-person follow that keeps the mouse nicely centered
-    camDesired.set(player.position.x, 19, player.position.z + 17);
+    camCenter.set(0, 0, 0); let n = 0, spread = 0;
+    for (const p of players) { camCenter.add(p.mesh.position); n++; }
+    if (n > 0) camCenter.multiplyScalar(1 / n);
+    for (const p of players) spread = Math.max(spread, Math.hypot(p.mesh.position.x - camCenter.x, p.mesh.position.z - camCenter.z));
+    const back = 17 + Math.min(14, spread * 1.1), height = 19 + Math.min(12, spread * 0.9);
+    camDesired.set(camCenter.x, height, camCenter.z + back);
     camera.position.lerp(camDesired, 1 - Math.pow(0.0015, dt));
     camera.position.add(camShake);
-    camera.lookAt(player.position.x, 1.0, player.position.z - 1);
+    camera.lookAt(camCenter.x, 1.0, camCenter.z - 1);
   }
 
   function updateMenuCam(dt) {
-    menuAngle += dt * 0.25;
+    elapsed += dt; menuAngle += dt * 0.25; const t = elapsed;
     camera.position.set(Math.sin(menuAngle) * 30, 18, Math.cos(menuAngle) * 30);
     camera.lookAt(0, 1.5, 0);
-    // idle animations so the scene feels alive
-    const t = elapsed += dt;
-    player.userData.tail.rotation.z = Math.sin(t * 3) * 0.3;
+    if (p1Mesh) { p1Mesh.userData.tail.rotation.z = Math.sin(t * 3) * 0.3; }
     cat.userData.tail.rotation.z = Math.sin(t * 4) * 0.4;
     cheeses.forEach(c => { c.userData.spin += dt; c.rotation.y = c.userData.spin; c.position.y = 0.9 + Math.sin(t * 3 + c.userData.spin) * 0.12; });
     updateParticles(dt);
   }
 
   function lerpAngle(a, b, t) {
-    let diff = b - a;
-    while (diff > Math.PI) diff -= Math.PI * 2;
-    while (diff < -Math.PI) diff += Math.PI * 2;
-    return a + diff * t;
+    let d = b - a; while (d > Math.PI) d -= Math.PI * 2; while (d < -Math.PI) d += Math.PI * 2; return a + d * t;
   }
 
   // ---------------------------------------------------------------------------
