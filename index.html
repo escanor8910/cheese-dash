@@ -197,6 +197,11 @@
 (function () {
   if (typeof THREE === "undefined") { return; }
 
+  // ---- lobby mode params (e.g. ?hard=1, ?players=2) ----
+  const LOBBY = new URLSearchParams(location.search);
+  const HARD = LOBBY.get("hard") === "1";
+  const AUTO_PLAYERS = LOBBY.get("players") === "2" ? 2 : (HARD ? 1 : 0);
+
   // ---------------------------------------------------------------------------
   // Tuning knobs
   // ---------------------------------------------------------------------------
@@ -218,7 +223,7 @@
   const POWERUP_LIFE = 11;      // seconds a power-up waits to be grabbed
 
   function levelTarget(lv) { return 5 + lv; }            // L1=6 ... L5=10
-  function catBaseFor(lv) { return CAT_SPEED_BASE + (lv - 1) * CAT_LEVEL_STEP; }
+  function catBaseFor(lv) { return CAT_SPEED_BASE + (lv - 1) * CAT_LEVEL_STEP + (HARD ? 3 : 0); }
 
   // ---------------------------------------------------------------------------
   // Themes (new places each level)
@@ -937,6 +942,7 @@
   }
 
   init();
+  if (AUTO_PLAYERS) startGame(AUTO_PLAYERS);   // launched straight from a lobby mode
 })();
 </script>
 </body>
